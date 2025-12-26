@@ -12,10 +12,13 @@ FTP-Like-Application-Using-Python-Sockets/
 ├── client/
 │   ├── client.py
 │   └── client_files/
+│       ├── Text.txt
+│       └── upload_test.jpg
 │
 ├── server/
 │   ├── server.py
 │   └── server_storage/
+│       └── sample_image.jpg
 │
 └── README.md
 ```
@@ -36,7 +39,7 @@ a persistent control connection and opens a new data channel for every file or d
 
 ## Scope of the Experiment
 
-- This project focuses on:
+This project focuses on:
 - Persistent TCP control connection
 - Separate TCP data connections for each transfer
 - FTP-style command parsing and responses
@@ -59,87 +62,78 @@ are intentionally excluded to keep the focus on core networking concepts.
 
 ## How STOR Works (Upload)
 ```
-server/server_storage/file.txt
-                │
-                │ RETR file.txt
-                ▼
-client/client_files/file.txt
+client/client_files/upload_test.jpg
+            │
+            │ STOR upload_test.jpg
+            ▼
+server/server_storage/upload_test.jpg
 ```
-The client reads the file from client_files and the server stores a copy inside server_storage.
+
+The client reads the file from client_files and uploads a copy to server_storage on the server.
+The original file stays on the client.
 
 ## How RETR Works (Download)
 ```
-server/server_storage/file.txt
+server/server_storage/sample_image.jpg
                 │
-                │ RETR file.txt
+                │ RETR sample_image.jpg
                 ▼
-client/client_files/file.txt
+client/client_files/sample_image.jpg
 ```
-The server sends the file from server_storage and the client saves it inside client_files.
+
+- The server sends the file from server_storage.
+- The client saves it inside client_files.
 
 ## How the Application Works
 
 - Client connects to server using a persistent control connection.
 - For every LIST, STOR, or RETR command:
-- Server opens a temporary TCP data port.
-- The port number is sent to the client.
-- Client connects to that data port to transfer data.
+  - Server opens a temporary TCP data port.
+  - The port number is sent to the client.
+  - Client connects to that data port to transfer data.
 - After the transfer, the data connection is closed.
 - Control connection remains active until QUIT.
+
+## Sample Files
+
+Client (`client_files/`)
+- Text.txt
+- upload_test.jpg
+
+Server (`server_storage/`)
+- sample_image.jpg
 
 ##  How to Run
 
 **Step 1 — Start Server**
-```
+```bash
 cd server
 python server.py
 ```
 **Step 2 — Start Client (new terminal)**
-```
+```bash
 cd client
 python client.py
 ```
 
 ## Example Output
-
-1. Client connects to server on the control port.
-2. Control channel remains open for entire session.
-3. For `LIST`, `STOR`, or `RETR`, server opens a **new temporary data port**.
-4. The data port number is sent back to the client.
-5. Client connects to the data port for file transfer.
-6. Data channel closes after each transfer.
-7. Control channel remains active until `QUIT`.
-
-
-## How to Run
-
-### Step 1 — Start Server
-```
-python server.py
-```
-### Step 2 — Start Client (new terminal)
-```
-python client.py
-```
-
-## Example Output
-```
+```text
 ftp> pwd
 257 "server/server_storage"
 
 ftp> RETR sample_image.jpg
-150 51045
+150 Opening data port
 226 Download complete
 
 ftp> STOR upload_test.jpg
-150 51049
+150 Opening data port
 226 Upload complete
 
 ftp> CWD images
 250 Directory changed to images
 
 ftp> RETR demo_photo.jpg
-150 51060
+150 Opening data port
 226 Download complete
 ```
 
