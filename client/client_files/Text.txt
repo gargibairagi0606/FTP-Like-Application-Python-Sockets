@@ -1,0 +1,17 @@
+Transmission Control Protocol - TCP
+Transmission Control Protocol (TCP) is a connection-oriented protocol for communications that helps in the exchange of messages between different devices over a network. It is one of the main protocols of the TCP/IP suite. In OSI model, it operates at the transport layer(Layer 4). It lies between the Application and Network Layers which are used in providing reliable delivery services. The Internet Protocol (IP), which establishes the technique for sending data packets between computers, works with TCP.
+
+TCP establishes a reliable connection between sender and receiver using the three-way handshake (SYN, SYN-ACK, ACK) and it uses a four-step handshake (FIN, ACK, FIN, ACK) to close connections properly.
+It ensures error-free, in-order delivery of data packets.
+It uses acknowledgments (ACKs) to confirm receipt.
+It prevents data overflow by adjusting the data transmission rate according to the receiver’s buffer size.
+It prevents network congestion using algorithms like Slow Start, Congestion Avoidance, Fast Retransmit, and Fast Recovery.
+TCP header uses checksum to detect corrupted data and requests retransmission if needed.
+It is used in applications requiring reliable and ordered data transfer, such as web browsing, email, and remote login.
+Features of TCP
+Segment Numbering: Each byte of data is numbered, and segments carry sequence numbers. Acknowledgment numbers confirm successful receipt.
+Connection-Oriented: Sender and receiver remain connected until data transfer is complete. Data order is preserved.
+Full Duplex: Data can flow in both directions simultaneously, improving efficiency.
+Flow Control: Uses a sliding window to prevent the sender from overwhelming the receiver.
+Error Control: Detects and manages corrupted, lost, duplicate, or out-of-order segments to ensure reliability.
+Congestion Control: Adjusts the sending rate based on network congestion to avoid overload.
